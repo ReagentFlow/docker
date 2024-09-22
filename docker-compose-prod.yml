@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  rf-backend:
+    build: ./backend
+    container_name: rf-backend
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend/:/usr/src/backend/
+    depends_on:
+      - test-db
+    networks:
+      app_network:
+        ipv4_address: 172.20.0.5
+
+  rf-frontend:
+    build: ./frontend
+    container_name: rf-frontend
+    command: npm start --host 0.0.0.0
+    volumes:
+      - ./frontend/:/home/app/web
+    networks:
+      app_network:
+        ipv4_address: 172.20.0.6
+
+  test-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: test_db
+    expose:
+      - 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      app_network:
+        ipv4_address: 172.20.0.4
+
+  pg_adm:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: root@root.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - 5055:80
+    networks:
+      app_network:
+        ipv4_address: 172.20.0.7
+
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - 443:443
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      app_network:
+        ipv4_address: 172.20.0.8
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  app_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16
