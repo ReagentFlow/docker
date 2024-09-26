@@ -1,0 +1,27 @@
+name: (CAREFUL) update prod
+on: 
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using ssh key
+      uses: appleboy/ssh-action@v1.0.3
+      env:
+        GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+        GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+      with:
+        host: ${{ secrets.PROD_HOST }}
+        username: ${{ secrets.PROD_USERNAME }}
+        key: ${{ secrets.PROD_KEY }}
+        port: ${{ secrets.PROD_PORT }}
+        script_stop: true
+        envs: GIT_USERNAME,GIT_PASSWORD
+        script: |
+          reagent-flow/stop-containers.sh
+          reagent-flow/pull.sh
+          reagent-flow/build-react.sh
+          reagent-flow/build-and-up-containers.sh
+          reagent-flow/migrations-django.sh
+          
