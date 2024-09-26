@@ -15,6 +15,7 @@ jobs:
         port: ${{ secrets.PROD_PORT }}
         script_stop: true
         script: |
+          chmod +x ~/reagent-flow/*.sh
           reagent-flow/stop-containers.sh
           reagent-flow/pull.sh
           reagent-flow/build-react.sh
