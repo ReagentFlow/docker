@@ -21,3 +21,4 @@ jobs:
           reagent-flow/build-react.sh
           reagent-flow/build-and-up-containers.sh
           reagent-flow/migrations-django.sh
+          reagent-flow/collect-static-backend.sh
