@@ -15,10 +15,10 @@ jobs:
         port: ${{ secrets.PROD_PORT }}
         script_stop: true
         script: |
-          chmod +x ~/reagent-flow/*.sh
-          reagent-flow/stop-containers.sh
-          reagent-flow/pull.sh
-          reagent-flow/build-react.sh
-          reagent-flow/build-and-up-containers.sh
-          reagent-flow/migrations-django.sh
-          reagent-flow/collect-static-backend.sh
+          chmod +x ~/docker/bin/*.sh
+          docker/bin/stop-containers.sh
+          docker/bin/pull.sh
+          docker/bin/build-react.sh
+          docker/bin/build-and-up-containers.sh
+          docker/bin/migrations-django.sh
+          docker/bin/collect-static-backend.sh
