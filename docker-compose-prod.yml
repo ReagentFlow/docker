@@ -59,6 +59,8 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
+      - /root/docker/frontend/build/static:/static
+      - /root/docker/backend/static:/static-backend
     networks:
       app_network:
         ipv4_address: 172.20.0.8
