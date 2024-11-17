@@ -1,7 +1,19 @@
 www.reagentflow.ru {
-    handle_path /api/* {
+    handle /api/* {
         reverse_proxy rf-backend:8000
     }
 
-    reverse_proxy rf-frontend:3000
+    handle_path /api/static/* {
+        root * /static-backend
+        file_server
+    }
+
+    handle_path /static/* {
+        root * /static
+        file_server
+    }
+
+    handle {
+        reverse_proxy rf-frontend:3000
+    }
 }
